@@ -5,7 +5,9 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"sync"
@@ -195,4 +197,29 @@ func TestTools_Slugify(t *testing.T) {
 		}
 	}
 
+}
+
+func TestTools_DownloadStaticFile(t *testing.T) {
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	var testTool Tools
+
+	testTool.DownloadStaticFile(rr, req, "./testdata/", "img.png", "bee.png")
+
+	res := rr.Result()
+	defer res.Body.Close()
+
+	if res.Header["Content-Length"][0] != "58917" {
+		t.Error("Wrong content length of ", res.Header["Content-Length"][0])
+	}
+
+	if res.Header["Content-Disposition"][0] != "attachment; filename=\"bee.png" {
+		t.Error("Wrong content disposition ", res.Header["Content-Disposition"][0])
+	}
+
+	_, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
 }
