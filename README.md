@@ -4,9 +4,9 @@ A simple example of how to create a reusable Go module with commonly used tools.
 
 The included tools are:
 
-- [ ] Read JSON
-- [ ] Write JSON
-- [ ] Produce a JSON encoded error response
+- [x] Read JSON
+- [x] Write JSON
+- [x] Produce a JSON encoded error response
 - [X] Upload a file to a specified directory
 - [x] Download a static file
 - [X] Get a random string of length n
@@ -16,4 +16,4 @@ The included tools are:
 
 ## Installation
 
-`go get -u github.com/tsawler/toolkit`
+`go get -u github.com/fastscripts/toolkit`
