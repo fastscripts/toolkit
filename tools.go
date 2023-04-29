@@ -1,6 +1,7 @@
 package toolkit
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/json"
 	"errors"
@@ -197,7 +198,7 @@ type JSONResponse struct {
 }
 
 // ReadJSON tries to read the body of a request and converts from json into a go data variable
-func (t *Tools) ReadJason(w http.ResponseWriter, r *http.Request, data interface{}) error {
+func (t *Tools) ReadJSON(w http.ResponseWriter, r *http.Request, data interface{}) error {
 	maxBytes := 1024 * 1024 // one mag
 	if t.MaxJSONSize != 0 {
 		maxBytes = t.MaxJSONSize
@@ -292,4 +293,41 @@ func (t *Tools) ErrorJSON(w http.ResponseWriter, err error, status ...int) error
 	payload.Message = err.Error()
 
 	return t.WriteJSON(w, statusCode, payload)
+}
+
+// PushJSONToRemote aribtrary data to some URL as JSON, and returns the respnse, status code and errorm if any
+// The final paramater, client, is optional ,If none is specified, we use the standard http.Client
+func (t *Tools) PushJSONToRemote(uri string, data interface{}, client ...*http.Client) (*http.Response, int, error) {
+	//create json
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// check for custom http client
+
+	httpClient := &http.Client{}
+	if len(client) > 0 {
+		httpClient = client[0]
+	}
+
+	// build the request and set the header
+
+	request, err := http.NewRequest("POST", uri, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// cal the remode url
+
+	response, err := httpClient.Do(request)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer response.Body.Close()
+
+	//send response back
+	return response, response.StatusCode, nil
+
 }
