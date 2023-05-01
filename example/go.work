@@ -1,0 +1,10 @@
+go 1.19
+
+use (
+	./app
+	./app-dir
+	./app-json
+	./app-slag
+	./app-upload
+	./toolkit
+)

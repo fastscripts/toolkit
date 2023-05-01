@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "app-upload"
+		},
+		{
+			"path": "app-dir"
+		},
+		{
+			"path": "app-slag"
+		},
+		{
+			"path": "app-download"
+		},
+		{
+			"path": "app-json"
+		}
+	],
+	"settings": {}
+}
